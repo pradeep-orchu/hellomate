@@ -71,7 +71,7 @@ class _JoinScreenState extends State<JoinScreen> {
                 FilledButton(
                   onPressed: (){
                     roomDatabase.createDocument(_pinControllers.toString(),Rooms(mates: [(user!.uid)]).toFirestore()).then( (value)=>
-                      UsersDatabase().createDocument(Users(inRoom: true).toFirestore(), user!.uid)
+                      UsersDatabase().addDocument(Users(inRoom: true).toFirestore(), user!.uid)
                     );
                   }, 
                   child: const Text('Join')

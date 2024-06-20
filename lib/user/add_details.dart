@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hellomate/user/users_database.dart';
@@ -22,7 +24,7 @@ class _AddDetailsState extends State<AddDetails> {
    final TextEditingController pincode = TextEditingController();
 
    final User? user = FirebaseAuth.instance.currentUser;
-   final UsersDatabase database = UsersDatabase();
+   final UsersDatabase usersDatabase = UsersDatabase();
 
  
 
@@ -63,17 +65,17 @@ class _AddDetailsState extends State<AddDetails> {
             onPressed: (){
               change();
               
-              database.createDocument(
+              usersDatabase.addDocument(
                 Users(
-                  name: widget.users!.name ?? name.text.trim()  ,
-                  age: widget.users!.age ?? int.tryParse(ageController.text) ,
-                  about:widget.users!.about ?? about.text.trim(),
-                  pincode:widget.users!.pincode ??  int.tryParse(pincode.text) ,
-                  city:widget.users!.city ?? city.text.trim(),
-                  status:widget.users!.status ?? status.text.trim(),
-                  state:widget.users!.state ??  state.text.trim(),
+                  name: name.text     ,
+                  age:  int.tryParse(ageController.text) ,
+                  about: about.text ,
+                  pincode:int.tryParse(pincode.text) ,
+                  city: city.text,
+                  status: status.text  ,
+                  state: state.text  ,
                   inRoom: widget.inRoom,
-                  gander:widget.users!.gander ??  gander.text.trim(),
+                  gander:gander.text ,
 
                   ).toFirestore(), 
                 user!.uid);

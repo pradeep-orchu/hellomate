@@ -67,7 +67,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
             ).toFirestore() )
             ,).then((value)=> 
-              UsersDatabase().createDocument(Users(inRoom: true).toFirestore(), user!.uid)
+              UsersDatabase().addDocument(Users(inRoom: true).toFirestore(), user!.uid)
             );
              setState(() {
       randomNumber = number;

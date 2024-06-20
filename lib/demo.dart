@@ -35,7 +35,7 @@ class _DemoState extends State<Demo> {
               controller: editingController,
             ),
             OutlinedButton(
-              onPressed:(){ databaseService.createDocument(
+              onPressed:(){ databaseService.addDocument(
               user.toFirestore(),
               '0022');}, 
               child: const Text('data')

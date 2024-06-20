@@ -5,7 +5,7 @@ class UsersDatabase {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Function to create a new document
-   Future<void> createDocument( Map<String, dynamic> data, String docId) async {
+   Future<void> addDocument( Map<String, dynamic> data, String docId) async {
     try {
       await db.collection("users").doc(docId).set(data);
     } on FirebaseException catch (e) {
