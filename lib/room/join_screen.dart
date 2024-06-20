@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hellomate/room/room_database.dart';
+import 'package:hellomate/room/rooms.dart';
+import 'package:hellomate/user/users.dart';
+import 'package:hellomate/user/users_database.dart';
 
 class JoinScreen extends StatefulWidget {
   const JoinScreen({super.key});
@@ -9,11 +14,15 @@ class JoinScreen extends StatefulWidget {
 
 class _JoinScreenState extends State<JoinScreen> {
   final List<TextEditingController> _pinControllers = List.generate(4, (_) => TextEditingController());
+  final RoomDatabase roomDatabase = RoomDatabase();
+  final Rooms rooms = Rooms();
+    final User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Join'),
+        title: const Text('Join'),
       ),
       body: SafeArea(
         child: Center(
@@ -56,6 +65,19 @@ class _JoinScreenState extends State<JoinScreen> {
                 ).toList(),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FilledButton(
+                  onPressed: (){
+                    roomDatabase.createDocument(_pinControllers.toString(),Rooms(mates: [(user!.uid)]).toFirestore()).then( (value)=>
+                      UsersDatabase().createDocument(Users(inRoom: true).toFirestore(), user!.uid)
+                    );
+                  }, 
+                  child: const Text('Join')
+                  )
+              ],
+            )
               ],
             ),
           ),

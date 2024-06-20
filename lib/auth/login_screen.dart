@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/forget_screen.dart';
+import 'package:hellomate/auth/forget_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback toggle;

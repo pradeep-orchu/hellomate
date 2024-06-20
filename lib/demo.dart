@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/database.dart';
-import 'package:hellomate/user.dart';
+import 'package:hellomate/user/users_database.dart';
+import 'package:hellomate/user/users.dart';
 
 class Demo extends StatefulWidget {
   const Demo({super.key});
@@ -14,7 +15,7 @@ class Demo extends StatefulWidget {
 
 class _DemoState extends State<Demo> {
   final TextEditingController editingController = TextEditingController();
-  final Database databaseService = Database();
+  final UsersDatabase databaseService = UsersDatabase();
   final Users user = Users(name: 'Fuck');
   
 
@@ -25,7 +26,7 @@ class _DemoState extends State<Demo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Demo'),
+        title: const Text('Demo'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -35,10 +36,9 @@ class _DemoState extends State<Demo> {
             ),
             OutlinedButton(
               onPressed:(){ databaseService.createDocument(
-              'users', 
               user.toFirestore(),
               '0022');}, 
-              child: Text('data')
+              child: const Text('data')
              )
           ],
         ),
@@ -53,8 +53,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final UsersDatabase usersDatabase = UsersDatabase();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   int? randomNumber;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   void generateAndSaveRandomNumber() async {
     // Generate a random 4-digit number
@@ -73,11 +75,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+void fuck (){
+  usersDatabase.getDocument(user!.uid).then((value)=> print(value));
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Random Number Generator'),
+        title: const Text('Random Number Generator'),
       ),
       body: Center(
         child: Column(
@@ -86,12 +91,12 @@ class _MyHomePageState extends State<MyHomePage> {
             if (randomNumber != null)
               Text(
                 'Generated Number: $randomNumber',
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: generateAndSaveRandomNumber,
-              child: Text('Generate Random Number'),
+              onPressed: fuck,
+              child: const Text('Generate Random Number'),
             ),
           ],
         ),

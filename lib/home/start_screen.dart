@@ -1,8 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/auth_screen.dart';
-import 'package:hellomate/home_screen.dart';
+import 'package:hellomate/auth/auth_screen.dart';
+import 'package:hellomate/home/home_screen.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key,});
@@ -18,7 +18,7 @@ class _StartScreenState extends State<StartScreen> {
       body: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),
        builder: (context,snapshot){
         if(snapshot.hasData){
-        return  HomeScreen();
+        return const HomeScreen();
         }else if (snapshot.hasError){
           return Scaffold(
             body: Center(
@@ -29,7 +29,7 @@ class _StartScreenState extends State<StartScreen> {
           );
         }
         else{
-         return AuthScreen();
+         return const AuthScreen();
         }
       }),
     );

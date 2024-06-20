@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hellomate/user/users_database.dart';
 
-import 'add_details.dart';
+import '../user/add_details.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -13,6 +14,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final user = FirebaseAuth.instance.currentUser!;
+  final UsersDatabase database = UsersDatabase();
 
   // sign user out method
   void signUserOut() {
@@ -35,15 +37,16 @@ class _SettingsState extends State<Settings> {
               children: [
                 TextButton(onPressed: (){
             
-                },child: Text('Exit'),),
-                TextButton(onPressed: signUserOut,child: Text('Signout'),),
+                },child: const Text('Exit'),),
+                TextButton(onPressed: signUserOut,child: const Text('Signout'),),
                 TextButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AddDetails()));
-                },child: Text('Change name'),),
-                TextButton(onPressed: (){},child: Text('Delete account'),),
-                TextButton(onPressed: (){},child: Text('Delete Room'),),
-                TextButton(onPressed: (){},child: Text('Add Note'),),
-                TextButton(onPressed: (){},child: Text('Profile'),),
+                  database.getDocument( user.uid).then((value)=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AddDetails(users: value,inRoom: true,))));
+                  
+                },child: const Text('Change name'),),
+                TextButton(onPressed: (){},child: const Text('Delete account'),),
+                TextButton(onPressed: (){},child: const Text('Delete Room'),),
+                TextButton(onPressed: (){},child: const Text('Add Note'),),
+                TextButton(onPressed: (){},child: const Text('Profile'),),
             
               ],
             ),

@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hellomate/add_details.dart';
 import 'package:hellomate/firebase_options.dart';
-import 'package:hellomate/start_screen.dart';
+import 'package:hellomate/home/start_screen.dart';
 
 Future<void> main() async {
 WidgetsFlutterBinding.ensureInitialized();

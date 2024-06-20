@@ -1,13 +1,11 @@
-
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/database.dart';
-import 'package:hellomate/user.dart';
+import 'package:hellomate/user/users_database.dart';
+import 'package:hellomate/user/users.dart';
 class AddDetails extends StatefulWidget {
-  const AddDetails({super.key});
+  final bool? inRoom;
+  final Users? users;
+  const AddDetails({super.key,  this.users, this.inRoom});
 
   @override
   State<AddDetails> createState() => _AddDetailsState();
@@ -24,7 +22,7 @@ class _AddDetailsState extends State<AddDetails> {
    final TextEditingController pincode = TextEditingController();
 
    final User? user = FirebaseAuth.instance.currentUser;
-   final Database database = Database();
+   final UsersDatabase database = UsersDatabase();
 
  
 
@@ -44,7 +42,7 @@ class _AddDetailsState extends State<AddDetails> {
     Navigator.of(context).pop();
 
    }on FirebaseAuthException catch (e){
-    print(e);
+    (e);
     Navigator.pop(context);
     
    }
@@ -66,19 +64,21 @@ class _AddDetailsState extends State<AddDetails> {
               change();
               
               database.createDocument(
-                'users', 
                 Users(
-                  name: name.text,
-                  age: ageController.text,
-                  about: about.text,
-                  pincode: pincode.text,
-                  city: city.text,
-                  status: status.text,
+                  name: widget.users!.name ?? name.text.trim()  ,
+                  age: widget.users!.age ?? int.tryParse(ageController.text) ,
+                  about:widget.users!.about ?? about.text.trim(),
+                  pincode:widget.users!.pincode ??  int.tryParse(pincode.text) ,
+                  city:widget.users!.city ?? city.text.trim(),
+                  status:widget.users!.status ?? status.text.trim(),
+                  state:widget.users!.state ??  state.text.trim(),
+                  inRoom: widget.inRoom,
+                  gander:widget.users!.gander ??  gander.text.trim(),
 
                   ).toFirestore(), 
-                "${user!.uid}");
+                user!.uid);
             }, 
-            icon: Icon(Icons.done_rounded)
+            icon: const Icon(Icons.done_rounded)
             )
         ],
       ),
@@ -93,7 +93,7 @@ class _AddDetailsState extends State<AddDetails> {
                   'Name',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                 TextField(
                   controller: name,
                   decoration: InputDecoration(
@@ -103,7 +103,7 @@ class _AddDetailsState extends State<AddDetails> {
                     )
                   ),
                 ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8,),
                
                  
                  Row(
@@ -116,11 +116,14 @@ class _AddDetailsState extends State<AddDetails> {
                       'Age',
                       style: Theme.of(context).textTheme.titleLarge,
                                        ),
-                                       SizedBox(height: 4,),
+                                       const SizedBox(height: 4,),
                            TextField(
+                            maxLength: 2,
+                          keyboardType: TextInputType.number,
                             controller: ageController,
                             decoration: InputDecoration(
                               hintText: 'Age',
+                              counterText: "",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25)
                               )
@@ -129,7 +132,7 @@ class _AddDetailsState extends State<AddDetails> {
                          ],
                        ),
                      ),
-                     SizedBox(width: 4,),
+                     const SizedBox(width: 4,),
                        Expanded(
                          child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +141,7 @@ class _AddDetailsState extends State<AddDetails> {
                       'Gander',
                       style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        SizedBox(height: 4,),
+                        const SizedBox(height: 4,),
                              TextField(
                                                      controller: gander,
                                                      decoration: InputDecoration(
@@ -153,12 +156,12 @@ class _AddDetailsState extends State<AddDetails> {
                        ),
                    ],
                  ),
-                 SizedBox(height: 8,),
+                 const SizedBox(height: 8,),
                   Text(
                   'About',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                 TextField(
                   controller: about,
                   maxLines: 3,
@@ -172,7 +175,7 @@ class _AddDetailsState extends State<AddDetails> {
                   'Status',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                  Row(
                    children: [
                      Expanded(
@@ -186,7 +189,7 @@ class _AddDetailsState extends State<AddDetails> {
                         ),
                                        ),
                      ),
-                     SizedBox(width: 4,),
+                     const SizedBox(width: 4,),
                      Expanded(
                        child: TextField(
                         controller: status,
@@ -200,12 +203,12 @@ class _AddDetailsState extends State<AddDetails> {
                      ),
                    ],
                  ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8,),
                  Text(
                   'Addresss',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                  TextField(
                   controller: state,
                   maxLines: 2,
@@ -216,7 +219,7 @@ class _AddDetailsState extends State<AddDetails> {
                     )
                   ),
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                 Row(
                    children: [
                      Expanded(
@@ -230,9 +233,11 @@ class _AddDetailsState extends State<AddDetails> {
                         ),
                                        ),
                      ),
-                     SizedBox(width: 4,),
+                     const SizedBox(width: 4,),
                      Expanded(
                        child: TextField(
+                        
+                        keyboardType: TextInputType.number,
                         controller: pincode,
                         decoration: InputDecoration(
                           hintText: 'pincode',
@@ -244,7 +249,7 @@ class _AddDetailsState extends State<AddDetails> {
                      ),
                    ],
                  ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8,),
                  
                
               ],

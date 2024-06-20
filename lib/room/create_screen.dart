@@ -1,11 +1,18 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hellomate/room/room_database.dart';
+import 'package:hellomate/room/rooms.dart';
+import 'package:hellomate/room/storage.dart';
+import 'package:hellomate/user/users.dart';
+import 'package:hellomate/user/users_database.dart';
 
 class CreateScreen extends StatefulWidget {
-  final String imagePath;
+  final File image;
 
-  const CreateScreen({super.key, required this.imagePath});
+  const CreateScreen({super.key, required this.image});
 
   @override
   State<CreateScreen> createState() => _CreateScreenState();
@@ -15,12 +22,23 @@ class _CreateScreenState extends State<CreateScreen> {
   final TextEditingController rent = TextEditingController();
   final TextEditingController food = TextEditingController();
   final TextEditingController discreption = TextEditingController();
-  final TextEditingController location = TextEditingController();
+  final TextEditingController address = TextEditingController();
   final TextEditingController country = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController pincode = TextEditingController();
   final TextEditingController state = TextEditingController();
   final TextEditingController rules = TextEditingController();
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  final Storage storage = Storage();
+  final RoomDatabase roomDatabase = RoomDatabase();
+
+  int? randomNumber;
+
+  void create (){
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +47,32 @@ class _CreateScreenState extends State<CreateScreen> {
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.done_rounded))
+          IconButton(onPressed: (){
+            Random random = Random();
+    int number = random.nextInt(9000) + 1000;
+            storage.uploadImage('room/', widget.image).then((value) => 
+            roomDatabase.createDocument('$number',Rooms(
+              image: value,
+              roomId: number,
+              rent: int.tryParse(rent.text),
+              food: int.tryParse(food.text),
+              pincode: int.tryParse(pincode.text),
+              rules: rules.text,
+              address: address.text,
+              country: country.text,
+              city: city.text,
+              state: state.text,
+              description: discreption.text,
+              mates:[user!.uid] ,
+
+            ).toFirestore() )
+            ,).then((value)=> 
+              UsersDatabase().createDocument(Users(inRoom: true).toFirestore(), user!.uid)
+            );
+             setState(() {
+      randomNumber = number;
+    });
+          }, icon: const Icon(Icons.done_rounded))
         ],
       ),
       body: SafeArea(
@@ -54,7 +97,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           borderRadius: BorderRadius.circular(25),
                           child: Image.file(
                             fit: BoxFit.cover,
-                            File(widget.imagePath)
+                            widget.image
                             ),
                         ),
                       ),
@@ -116,7 +159,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     ),
                     const SizedBox(height: 4,),
                     TextField(
-                      controller: location,
+                      controller: address,
                       decoration: InputDecoration(
                         hintText: 'D-No/ Landmark.',
                         border: OutlineInputBorder(
@@ -171,6 +214,7 @@ class _CreateScreenState extends State<CreateScreen> {
                         const SizedBox(width: 4,),
                         Expanded(
                           child: TextField(
+                            keyboardType: TextInputType.number,
                             controller: pincode,
                             decoration: InputDecoration(
                         hintText: 'Pincode',

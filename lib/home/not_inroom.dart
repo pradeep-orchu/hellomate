@@ -1,23 +1,27 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/add_details.dart';
 import 'package:hellomate/camera.dart';
-import 'package:hellomate/create_screen.dart';
-import 'package:hellomate/demo.dart';
-import 'package:hellomate/join_screen.dart';
-import 'package:hellomate/settings.dart';
+import 'package:hellomate/room/join_screen.dart';
+import 'package:hellomate/home/settings.dart';
+import 'package:hellomate/user/users.dart';
+import 'package:hellomate/user/users_database.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key,});
+class NotInroom extends StatefulWidget {
+  const NotInroom({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<NotInroom> createState() => _NotInroomState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _NotInroomState extends State<NotInroom> {
+     final UsersDatabase usersDatabase = UsersDatabase();
    final user = FirebaseAuth.instance.currentUser!;
    late CameraDescription cameraDescription;
+
+   late Users users;
+
+   
 
    Future<CameraDescription> camera()async {
      final cameras = await availableCameras();
@@ -26,13 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final firstCamera = cameras.first;
   return firstCamera;
    }
-
   @override
   Widget build(BuildContext context) {
-    if(user.displayName == null){
-   return const AddDetails();
-    }else{
-       return Scaffold(
+    return Scaffold(
         appBar: AppBar(
          
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -135,16 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         )
       ),
-      floatingActionButton: Visibility(
-        visible: user.displayName == null,
-        child: FloatingActionButton(
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>  Demo()));
-            },
-          child: const Icon(Icons.add),
-        ),
-      ),
+      
     );
-    }
   }
 }

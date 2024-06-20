@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hellomate/login_screen.dart';
-import 'package:hellomate/register_screen.dart';
+import 'package:hellomate/auth/login_screen.dart';
+import 'package:hellomate/auth/register_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});

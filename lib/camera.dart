@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:hellomate/create_screen.dart';
+import 'package:hellomate/room/create_screen.dart';
 
 class TakePictureScreen extends StatefulWidget {
  
@@ -92,13 +92,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 builder: (context) => CreateScreen(
                   // Pass the automatically generated path to
                   // the DisplayPictureScreen widget.
-                  imagePath: image.path,
+                  image: File(image.path),
                 ),
               ),
             );
           } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
+            // If an error
           }
         },
         child: const Icon(Icons.camera_alt),

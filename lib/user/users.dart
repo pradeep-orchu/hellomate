@@ -6,16 +6,16 @@ class Users {
   final String? country;
   final bool? inRoom;
   final String? state;
-  final String? age;
-  final String? gender;
+  final int? age;
+  final String? gander;
   final String? status;
-  final String? pincode;
+  final int? pincode;
   final String? about;
 
   Users({
     this.state,
     this.age, 
-    this.gender, 
+    this.gander, 
     this.status,
     this.name,
     this.city,
@@ -32,7 +32,7 @@ class Users {
     final data = snapshot.data();
     return Users(
       name: data?['name'],
-      gender: data?['gender'],
+      gander: data?['gander'],
       state: data?['state'],
       age: data?['age'],
       status: data?['status'],
@@ -50,7 +50,7 @@ class Users {
       if (age != null) "age": age,
       if (status != null) "status": status,
       if (state != null) "state": state,
-      if (gender != null) "gender": gender,
+      if (gander != null) "gander": gander,
       if (city != null) "city": city,
       if (country != null) "country": country,
       if (inRoom != null) "inRoom": inRoom,
