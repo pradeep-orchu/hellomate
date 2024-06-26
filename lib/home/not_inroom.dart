@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hellomate/camera.dart';
-import 'package:hellomate/room/join_screen.dart';
+import 'package:hellomate/join/join_screen.dart';
 import 'package:hellomate/home/settings.dart';
 import 'package:hellomate/user/users.dart';
 import 'package:hellomate/user/users_database.dart';
@@ -72,7 +72,7 @@ class _NotInroomState extends State<NotInroom> {
                           height: 78,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.tertiaryContainer,
+                            color: Theme.of(context).hoverColor,
                             borderRadius: BorderRadius.circular(25)
                           ),
                           child: Center(
@@ -104,7 +104,7 @@ class _NotInroomState extends State<NotInroom> {
                           height: 78,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.secondaryContainer,
+                            color: Theme.of(context).hoverColor,
                             borderRadius: BorderRadius.circular(25)
                           ),
                           child: Center(

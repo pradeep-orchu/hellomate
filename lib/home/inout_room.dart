@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hellomate/home/inroom_screen.dart';
+import 'package:hellomate/home/loading_screen.dart';
 import 'package:hellomate/home/not_inroom.dart';
 import 'package:hellomate/room/room_database.dart';
 import 'package:hellomate/user/users.dart';
@@ -14,32 +16,24 @@ class InoutRoom extends StatefulWidget {
 
 class _InoutRoomState extends State<InoutRoom> {
   final RoomDatabase roomDatabase = RoomDatabase();
+  final User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    final String? roomId = widget.users!.inRoom;
     return FutureBuilder(
-     future: roomDatabase.getDocument('docId'),
+     future: roomDatabase.getDocument("$roomId"),
      builder: (context,snapshot){
-      if (snapshot.connectionState == ConnectionState.done) {
-        if (widget.users!.inRoom == true) {
-        return  InroomScreen(users: widget.users,rooms:snapshot.data,);
-        }else if ( widget.users!.inRoom == false){
-          return const NotInroom();
-        }
-        else{
-          return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+      if(snapshot.connectionState == ConnectionState.done){
+        if(snapshot.hasData){
+          return InroomScreen(users: widget.users, rooms: snapshot.data);
+        }else{
+          return NotInroom();
         }
       }else{
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+       return LoadingScreen();
       }
      }
+     
      );
   }
 }

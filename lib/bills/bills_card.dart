@@ -12,39 +12,30 @@ class _BillsCardState extends State<BillsCard> {
   Widget build(BuildContext context) {
     return Container(
                             width: double.maxFinite,
-                            height: 150,
+                            height: 124,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: Theme.of(context).colorScheme.secondaryContainer
+                              color: Theme.of(context).hoverColor
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Bills',
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          ),
-                                        Text(
-                                          'Here you can add bills of your Room other expenses,also split bills.',
-                                          style: Theme.of(context).textTheme.bodyLarge,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                          )
-                                      ],
-                                    ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Coming soon...',
+                                        style: Theme.of(context).textTheme.titleLarge,
+                                        ),
+                                      
+                                    ],
                                   ),
-                                  IconButton(onPressed: (){}, icon: Icon(Icons.add_circle_outline_rounded,size: 60,))
-                                ],
-                              ),
+                                ),
+                                
+                              ],
                             ),
                                                   );
   }

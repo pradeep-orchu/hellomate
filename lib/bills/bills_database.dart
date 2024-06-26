@@ -5,9 +5,9 @@ class BillsDatabase {
    final FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Function to create a new document
-   Future<void> createDocument(String docId, Map<String, dynamic> data ) async {
+   Future<void> createDocument(String docId, Map<String, dynamic> data, String billsId) async {
     try {
-      await db.collection("rooms").doc(docId).set(data);
+      await db.collection("rooms").doc(docId).collection('bills').doc(billsId).set(data);
     } on FirebaseException catch (e) {
       (e);
       return ;
@@ -17,14 +17,14 @@ class BillsDatabase {
   // Function to read a document
   Future<Bills?> getDocument( String documentId) async {
     try {
-      final ref = db.collection("rooms").doc(documentId).withConverter(
+      final ref = db.collection("rooms").doc(documentId).collection('bills').doc().withConverter(
       fromFirestore: Bills.fromFirestore,
-      toFirestore: (Bills rooms, _) => rooms.toFirestore(),
+      toFirestore: (Bills bills, _) => bills.toFirestore(),
     );
 final docSnap = await ref.get();
-final rooms = docSnap.data(); // Convert to City object
-if (rooms != null) {
- return rooms;
+final bills = docSnap.data(); // Convert to City object
+if (bills != null) {
+ return bills;
 } else {
   return null;
 }
@@ -35,9 +35,9 @@ if (rooms != null) {
   }
 
   // Function to update a document
-  Future<void> updateDocument( String documentId, Map<String, dynamic> newData) async {
+  Future<void> updateDocument( String roomId, Map<String, dynamic> newData,String billsId) async {
     try {
-      await db.collection("rooms").doc(documentId).update(newData);
+      await db.collection("rooms").doc(roomId).collection('bills').doc(billsId).update(newData);
     } catch (e) {
       (e);
     }
@@ -61,5 +61,10 @@ if (rooms != null) {
       (e);
       return null;
     }
+  }
+
+  Stream<List<Bills?>?> getNotes(String roomId) {
+     return db.collection('rooms').doc(roomId).collection('bills').orderBy('billsId').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Bills.fromFirestore(doc, SnapshotOptions())).toList());
   }
 }

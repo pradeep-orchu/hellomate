@@ -1,7 +1,7 @@
-import 'dart:js_interop';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hellomate/home/inout_room.dart';
 import 'package:hellomate/user/users_database.dart';
 import 'package:hellomate/user/users.dart';
 class AddDetails extends StatefulWidget {
@@ -28,7 +28,7 @@ class _AddDetailsState extends State<AddDetails> {
 
  
 
-   void change () async{
+   void add () async{
      showDialog(
       context: context,
       builder: (context) {
@@ -41,7 +41,6 @@ class _AddDetailsState extends State<AddDetails> {
    await FirebaseAuth.instance.currentUser!.updateDisplayName(name.text);
     
     Navigator.pop(context);
-    Navigator.of(context).pop();
 
    }on FirebaseAuthException catch (e){
     (e);
@@ -63,7 +62,7 @@ class _AddDetailsState extends State<AddDetails> {
         actions: [
           IconButton(
             onPressed: (){
-              change();
+              add();
               
               usersDatabase.addDocument(
                 Users(
@@ -74,11 +73,13 @@ class _AddDetailsState extends State<AddDetails> {
                   city: city.text,
                   status: status.text  ,
                   state: state.text  ,
-                  inRoom: widget.inRoom,
+                  inRoom: widget.inRoom.toString(),
                   gander:gander.text ,
 
                   ).toFirestore(), 
-                user!.uid);
+                user!.uid).then(
+                  (e)=> Navigator.push(context, MaterialPageRoute(builder: (context)=> InoutRoom()))
+                );
             }, 
             icon: const Icon(Icons.done_rounded)
             )

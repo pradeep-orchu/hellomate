@@ -35,9 +35,9 @@ if (notes != null) {
   }
 
   // Function to update a document
-  Future<void> updateDocument( String documentId, Map<String, dynamic> newData) async {
+  Future<void> updateDocument( String roomId, Map<String, dynamic> newData,String noteId) async {
     try {
-      await db.collection("rooms").doc(documentId).update(newData);
+      await db.collection("rooms").doc(roomId).collection('notes').doc(noteId).update(newData);
     } catch (e) {
       (e);
     }
@@ -64,7 +64,7 @@ if (notes != null) {
   }
 
   Stream<List<Notes?>?> getNotes(String roomId) {
-     return db.collection('rooms').doc(roomId).collection('notes').orderBy('noteId').snapshots().map((snapshot) =>
+     return db.collection('rooms').doc(roomId).collection('notes').orderBy('noteId', descending: true).snapshots().map((snapshot) =>
         snapshot.docs.map((doc) => Notes.fromFirestore(doc, SnapshotOptions())).toList());
   }
 }

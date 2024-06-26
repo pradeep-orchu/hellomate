@@ -18,9 +18,12 @@ class _StartScreenState extends State<StartScreen> {
       body: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),
        builder: (context,snapshot){
         if(snapshot.hasData){
-        return const HomeScreen();
+        return  HomeScreen();
         }else if (snapshot.hasError){
           return Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 0,
+            ),
             body: Center(
               child: Text(
                 '${snapshot.error}'

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
+  final String? userId;
   final String? name;
   final String? city;
   final String? country;
-  final bool? inRoom;
+  final String? inRoom;
   final String? state;
   final int? age;
   final String? gander;
@@ -13,6 +14,7 @@ class Users {
   final String? about;
 
   Users({
+    this.userId,
     this.state,
     this.age, 
     this.gander, 
@@ -31,6 +33,7 @@ class Users {
   ) {
     final data = snapshot.data();
     return Users(
+      userId: data?['userId'],
       name: data?['name'],
       gander: data?['gander'],
       state: data?['state'],
@@ -46,6 +49,7 @@ class Users {
 
   Map<String, dynamic> toFirestore() {
     return {
+      if (userId != null) "userId": userId,
       if (name != null) "name": name,
       if (age != null) "age": age,
       if (status != null) "status": status,

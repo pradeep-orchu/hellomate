@@ -31,57 +31,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.text,
         password: password.text,
-      );
+      ).then((e)=> Navigator.pop(context));
       // pop the loading circle
-      Navigator.pop(context);
+     
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
-      // WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        // show error to user
-        wrongEmailMessage();
-      }
-
-      // WRONG PASSWORD
-      else if (e.code == 'wrong-password') {
-        // show error to user
-        wrongPasswordMessage();
-      }
+  _showErrorDialog(e.message);
     }
   }
 
   // wrong email message popup
-  void wrongEmailMessage() {
+   void _showErrorDialog(String? message) {
     showDialog(
       context: context,
-      builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(
-              'Incorrect Email',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
-      },
+      builder: (ctx) => AlertDialog(
+        title: Text('Login Error'),
+        content: Text(message ?? 'An unknown error occurred.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
     );
   }
 
-  // wrong password message popup
-  void wrongPasswordMessage() {
+  // wrong email message popup
+  void wrongEmtyTExt() {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.deepPurple,
-          title: Center(
-            child: Text(
-              'Incorrect Password',
-              style: TextStyle(color: Colors.white),
-            ),
+        return  AlertDialog(
+          title: Text('Login Error'),
+          content: Text(
+            'Enter both email and password',
+           
+            
           ),
+          actions: [
+            TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }
+          )
+          ],
         );
       },
     );
@@ -98,7 +96,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
             )
           ],
           title: Center(
-            child: Text('sknnsfksdfjkjdsfkj'),
+            child: Text('Need help'),
+          ),
+          content: Column(
+            children: [
+              Text(
+                ''
+              ),
+              Text(
+                ''
+              ),
+              Text(
+                ''
+              ),
+            ],
           ),
         );
       }
@@ -157,10 +168,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         )
                         ),
                         FilledButton(onPressed:(){
+                          if(email.text == ''|| password.text == '' || confirm.text == ''){
                           if(password.text== confirm.text){
                             create();
                           }else{
-                          }
+                          }}
                         }, child: Text('Register'))
                         ],
                         ),

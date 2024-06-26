@@ -11,10 +11,14 @@ class Rooms {
   final String? city;
   final int? pincode;
   final int? rent;
+  final List<String>? nearby;
+  final bool? isFemale;
   final int? food;
   final List<String>? mates;
 
   Rooms({
+    this.nearby,
+    this.isFemale,
     this.description, 
     this.rules, 
     this.image,
@@ -36,16 +40,19 @@ class Rooms {
     final data = snapshot.data();
     return Rooms(
       roomId: data?['roomId'],
+      isFemale: data?['isFemale'],
       state: data?['state'],
       country: data?['country'],
       city: data?['city'],
       pincode: data?['pincode'],
       rent: data?['rent'],
       rules: data?['rules'],
-      image: data?['iamge'],
+      image: data?['image'],
       address: data?['address'],
       food: data?['food'],
       description: data?['description'],
+       nearby:
+          data?['nearby'] is Iterable ? List.from(data?['nearby']) : null,
       mates:
           data?['mates'] is Iterable ? List.from(data?['mates']) : null,
     );
@@ -65,6 +72,8 @@ class Rooms {
       if (address != null) "address": address,
       if (description != null) "description": description,
       if (rules != null) "rules": rules,
+      if (isFemale != null) "isFemale": isFemale,
+      if (nearby != null) "nearby": nearby,
     };
   }
 }

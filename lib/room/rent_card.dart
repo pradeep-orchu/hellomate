@@ -1,57 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:hellomate/request/request.dart';
+import 'package:hellomate/request/request_database.dart';
+import 'package:hellomate/room/room_database.dart';
 import 'package:hellomate/room/rooms.dart';
+import 'package:hellomate/user/users.dart';
 
 class RentCard extends StatefulWidget {
   final Rooms? rooms;
- final Color? color;
-  const RentCard({super.key, required this.rooms, this.color});
+  final Users? users;
+  const RentCard({super.key, required this.rooms, required this.users});
 
   @override
   State<RentCard> createState() => _RentCardState();
 }
 
 class _RentCardState extends State<RentCard> {
+  final RequestDatabase requestDatabase = RequestDatabase();
+ 
+  final requestId = DateTime.now();
   @override
   Widget build(BuildContext context) {
     
-    return Expanded(
+    return  Expanded(
                           child: Container(
                             width: double.maxFinite,
-                            height: 150,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: Theme.of(context).colorScheme.primaryContainer
+                              color: Theme.of(context).hoverColor
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Rent",
-                                        style: Theme.of(context).textTheme.titleSmall,
+                                        style: Theme.of(context).textTheme.titleLarge,
                                       ),
-                                       Text(
-                                    "₹${widget.rooms!.rent}(per head ${widget.rooms!.rent!/widget.rooms!.mates!.length})",
-                                    style: Theme.of(context).textTheme.labelLarge,
-                                  ),
+                                       Row(
+                                         children: [
+                                           Text('Total:',style: Theme.of(context).textTheme.labelLarge,),
+                                           SizedBox(width: 4,),
+                                           Text(
+                                                                            "${widget.rooms!.rent}",
+                                                                            style: Theme.of(context).textTheme.headlineSmall,
+                                                                          ),
+                                         ],
+                                       ),
+                                        
+                                        Row(
+                                          children: [
+                                            Text("Share:",style: Theme.of(context).textTheme.labelLarge,),
+                                            SizedBox(width: 4,),
+                                             Text(
+                                                                            "${widget.rooms!.rent!/ (widget.rooms!.mates!.length)}",
+                                                                            style: Theme.of(context).textTheme.headlineSmall,
+                                                                          ),
+                                          ],
+                                        ),
+                                       
                                     ],
                                   ),
-                                 Text(
-                                  'let your room mates Know your paying',
-                                  maxLines: 4,
-                                  style: Theme.of(context).textTheme.labelSmall,
-                                    ),
-                                  FilledButton(
-                                    onPressed: (){}, 
-                                    child: const Text('Pay now')
-                                    )
+                                
+                                  
                                 ],
                               ),
                             ),
                           ),
-                        );
+                                                  );
   }
 }

@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController password = TextEditingController();
 
   // sign user in method
-  void signUserIn() async {
+  Future<void> signUserIn() async {
     // show loading circle
     showDialog(
       context: context,
@@ -27,68 +27,61 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     // try sign in
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.text,
-        password: password.text,
-      );
-      // pop the loading circle
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // pop the loading circle
-      Navigator.pop(context);
-      // WRONG EMAIL
-      if (e.code == 'user-not-found') {
-        // show error to user
-        print(e.message);
-        wrongEmailMessage();
-        
-      }
+   try {
+   await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: email.text,
+    password: password.text
+  ).then((e)=> Navigator.pop(context));
+} on FirebaseAuthException catch (e) {
+  Navigator.pop(context);
+  _showErrorDialog(e.message);
+}
+  }
 
-      // WRONG PASSWORD
-      else if (e.message == 'wrong-password') {
-        // show error to user
-        wrongPasswordMessage();
-         print(e.message);
-      }else{
-        print(e.code);
-      }
-    }
+   void _showErrorDialog(String? message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Login Error'),
+        content: Text(message ?? 'An unknown error occurred.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
   }
 
   // wrong email message popup
-  void wrongEmailMessage() {
+  void wrongEmtyTExt() {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Center(
-            child: Text(
-              'Incorrect Email',
-              style: TextStyle(color: Colors.white),
-            ),
+        return  AlertDialog(
+          title: Text('Login Error'),
+          content: Text(
+            'Enter both email and password',
+           
+            
           ),
+          actions: [
+            TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }
+          )
+          ],
         );
       },
     );
   }
 
-  // wrong password message popup
-  void wrongPasswordMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Center(
-            child: Text(
-              'Incorrect Password',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
-      },
-    );
-  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: SafeArea(child: Padding(
@@ -133,7 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Forget Password'
                         )
                         ),
-                        FilledButton(onPressed:signUserIn, child: Text('Login'))
+                        FilledButton(
+                          onPressed:(){
+                            if (email.text != "" || password.text != ""){
+                        signUserIn();}else{
+                          wrongEmtyTExt();
+                        }
+                        }, 
+                        child: Text('Login'))
                         ],
                         ),
                         SizedBox(height: 8,),

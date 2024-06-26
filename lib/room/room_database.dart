@@ -53,10 +53,11 @@ if (rooms != null) {
   }
 
   // Function to get a list of documents in a collection
-  Future<List<Object?>?> getCollection() async {
+  // Function to get a list of documents in a collection
+  Future<List<Rooms?>?> getCollection(String city) async {
     try {
-      QuerySnapshot snapshot = await db.collection("rooms").get();
-      return snapshot.docs.map((doc) => doc.data()).toList();
+      final  snapshot = await db.collection("rooms").where("city", isEqualTo: city).get();
+      return snapshot.docs.map((doc) => Rooms.fromFirestore(doc, SnapshotOptions())).toList();
     } catch (e) {
       (e);
       return null;

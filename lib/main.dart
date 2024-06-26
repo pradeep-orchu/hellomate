@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hellomate/demo.dart';
 import 'package:hellomate/firebase_options.dart';
 import 'package:hellomate/home/start_screen.dart';
+import 'package:hellomate/location/city_screen.dart';
 
 Future<void> main() async {
 WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const StartScreen(),
+      home: StartScreen(),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:hellomate/location/location_service.dart';
 import 'package:hellomate/room/room_database.dart';
 import 'package:hellomate/room/rooms.dart';
 import 'package:hellomate/room/storage.dart';
@@ -33,24 +35,46 @@ class _CreateScreenState extends State<CreateScreen> {
 
   final Storage storage = Storage();
   final RoomDatabase roomDatabase = RoomDatabase();
+  List<String>? nearby;
 
   int? randomNumber;
 
-  void create (){
-    
+   @override
+  void initState() {
+    super.initState();
+    _getloc();
   }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create'),
-        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        actions: [
-          IconButton(onPressed: (){
+
+  Future<void> _getloc() async {
+    Placemark? loc = await LocationService.getCityName(0);
+    Placemark? near1 = await LocationService.getCityName(1);
+    Placemark? near2 = await LocationService.getCityName(2);
+    Placemark? near3 = await LocationService.getCityName(3);
+    //cityName = loc!.locality;
+    setState(() {
+      city.text = loc!.locality!;
+      country.text = loc.country!;
+      pincode.text = loc.postalCode!;
+      state.text = loc.administrativeArea!;
+      address.text = '${loc.name!} ${loc.thoroughfare}';
+      nearby = ['${near1!.locality}','${near2!.locality}''${near3!.locality}'];
+    });
+  }
+  void create (){
+    showDialog(
+      context: context, 
+    builder: (context)=> AlertDialog(
+      content: DropdownMenu(
+        dropdownMenuEntries: 
+      [
+        
+      ]
+      ),
+      actions: [
+        OutlinedButton(onPressed: (){
             Random random = Random();
     int number = random.nextInt(9000) + 1000;
-            storage.uploadImage('room/', widget.image).then((value) => 
+            storage.uploadImage('room/$number', widget.image).then((value) => 
             roomDatabase.createDocument('$number',Rooms(
               image: value,
               roomId: number,
@@ -61,18 +85,33 @@ class _CreateScreenState extends State<CreateScreen> {
               address: address.text,
               country: country.text,
               city: city.text,
+              nearby: nearby,
               state: state.text,
               description: discreption.text,
               mates:[user!.uid] ,
 
             ).toFirestore() )
             ,).then((value)=> 
-              UsersDatabase().addDocument(Users(inRoom: true).toFirestore(), user!.uid)
+              UsersDatabase().updateDocument( user!.uid, Users(inRoom: number.toString()).toFirestore())
             );
              setState(() {
       randomNumber = number;
     });
-          }, icon: const Icon(Icons.done_rounded))
+        }, child: Text('Create')
+        )
+      ],
+    )
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create'),
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        actions: [
+          IconButton(onPressed: create, icon: const Icon(Icons.done_rounded))
         ],
       ),
       body: SafeArea(

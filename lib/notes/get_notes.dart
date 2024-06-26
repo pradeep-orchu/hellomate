@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hellomate/notes/note_card.dart';
 import 'package:hellomate/notes/notes_database.dart';
 import 'package:hellomate/room/rooms.dart';
 
@@ -24,19 +25,17 @@ class _GetNotesState extends State<GetNotes> {
          
           if (snapshot.data != null) {
             return ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(snapshot.data![index]!.context.toString()),
-                subtitle: Text( snapshot.data![index]!.noteId.toString()),
-               
-              );
+              return 
+              NoteCard(notes: snapshot.data![index]);
+             
             }
               );
           }else{
-            return Text('no data');
+            return const Text('no data');
           }
           
           
