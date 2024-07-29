@@ -16,10 +16,9 @@ class _FoodCardState extends State<FoodCard> {
      
     return  Expanded(
                           child: Container(
-                            width: double.maxFinite,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: Theme.of(context).hoverColor
+                              color: Theme.of(context).cardTheme.color
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),

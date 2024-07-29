@@ -24,7 +24,7 @@ class _NoteCardState extends State<NoteCard> {
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          //color: Theme.of(context).hoverColor,
+          color: Theme.of(context).colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(25)
         ),
         child: Column(

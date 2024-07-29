@@ -41,7 +41,7 @@ class _RequestCardState extends State<RequestCard> {
             //   ],
             // )
             OutlinedButton(onPressed: (){
-                roomDatabase.updateDocument(, newData)
+               // roomDatabase.updateDocument(, newData)
             }, child: Text(
               'agree'
             ))

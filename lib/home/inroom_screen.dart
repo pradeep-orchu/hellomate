@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hellomate/bills/bills_card.dart';
+import 'package:hellomate/demo.dart';
 import 'package:hellomate/home/home_screen.dart';
 import 'package:hellomate/home/inout_room.dart';
 import 'package:hellomate/home/not_inroom.dart';
@@ -31,7 +32,22 @@ class InroomScreen extends StatefulWidget {
   State<InroomScreen> createState() => _InroomScreenState();
 }
 
-class _InroomScreenState extends State<InroomScreen> {
+class _InroomScreenState extends State<InroomScreen> with SingleTickerProviderStateMixin{
+
+ late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   final TextEditingController note = TextEditingController();
    final UsersDatabase usersDatabase = UsersDatabase();
    final user = FirebaseAuth.instance.currentUser!;
@@ -126,108 +142,60 @@ class _InroomScreenState extends State<InroomScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-          actions: [
-            IconButton(onPressed: (){
-              nmate.remove(user.uid);
-              exitRoom(nmate);
-              }, icon: const Icon(Icons.exit_to_app_rounded,),)
-          ],
         ),
         body:  SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Stack(
-              children: [SingleChildScrollView(
+            child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
-                    
-                    Text(
-                      'Hello,',
-                      style: Theme.of(context).textTheme.displaySmall,
-                    ),
-                    Text(
-                      overflow: TextOverflow.ellipsis,
-                      '${widget.users!.name}',
-                      style: Theme.of(context).textTheme.displaySmall,
+                    Text('Hello,\n${widget.users!.name}',
+                       style: Theme.of(context).textTheme.displayMedium,
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8,),
                      Row(
                       children: [
-                        RentCard(rooms: widget.rooms, users: widget.users, ),
-                        const SizedBox(width: 8,),
+                        const BillsCard(),
+                        Column(
+                          children: [
+                            RentCard(rooms: widget.rooms, users: widget.users, ),
+                            const SizedBox(width: 4,),
                          FoodCard(rooms: widget.rooms, )
+                          ],
+                        ),
+                        
                       ],
                     ),
-                    const SizedBox(height: 8,),
-                     const BillsCard(),
+                    const SizedBox(height: 4,),
+                     
                           const SizedBox(height: 8,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
+                           Text(
                                 'Notes',
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
-                              GestureDetector(onTap: addNote, child: const Icon(Icons.add_rounded,size: 32,))
-                            ],
-                          ),
+                              GetNotes(rooms: widget.rooms),
                           const SizedBox(height: 4,),
-                          GetNotes(rooms: widget.rooms)
+                          
                   ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Container(
-                    height: 60,
-                    width: 240,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                     // color: Theme.of(context).hoverColor
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=> UsersScreen(users: widget.users,)));
-                          }, 
-                          icon: const Icon(Icons.account_circle_rounded,size: 40,)
-                          ),
-                           IconButton(
-                          onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> NotificationScreen(rooms: widget.rooms,)));
-                  
-                          }, 
-                          icon: const Icon(Icons.notifications_rounded,size: 40,),
-                          ),
-                          IconButton(
-                          onPressed: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=>  const JoinScreen()));
-                          }, 
-                          icon: const Icon(Icons.search_rounded,size: 40,)
-                          ), 
-                          IconButton(
-                          onPressed: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=> const Settings()));
-                          }, 
-                          icon: const Icon(Icons.settings,size: 40,)
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              ]
-            ),
-          )
-        ),
+                ),)
+                ,
+              ),),
         
+       endDrawer: Drawer(
+        child: Column(
+          children: [
+             IconButton(onPressed: (){
+              nmate.remove(user.uid);
+              exitRoom(nmate);
+              }, icon: const Icon(Icons.exit_to_app_rounded,),),
+          ],
+        ),
+       ),
+          
       );
     }else{
      return const NotInroom();

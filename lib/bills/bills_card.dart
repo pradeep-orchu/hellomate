@@ -12,7 +12,6 @@ class _BillsCardState extends State<BillsCard> {
   Widget build(BuildContext context) {
     return Container(
                             width: double.maxFinite,
-                            height: 124,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               color: Theme.of(context).hoverColor

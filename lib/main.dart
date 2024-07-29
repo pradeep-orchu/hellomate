@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hellomate/demo.dart';
 import 'package:hellomate/firebase_options.dart';
 import 'package:hellomate/home/start_screen.dart';
-import 'package:hellomate/location/city_screen.dart';
+import 'package:hellomate/theme.dart';
 
 Future<void> main() async {
 WidgetsFlutterBinding.ensureInitialized();
@@ -28,11 +28,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       title: 'Hellomate',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+       darkTheme: ThemeData.from(
+        colorScheme: MaterialTheme.darkScheme(),
+        useMaterial3: true, 
+      ),
+      theme: ThemeData.from(
+        colorScheme: MaterialTheme.lightScheme(),
         useMaterial3: true,
       ),
-      home: StartScreen(),
+      home: Demo(),
     );
   }
 }

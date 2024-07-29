@@ -23,7 +23,6 @@ class _RentCardState extends State<RentCard> {
     
     return  Expanded(
                           child: Container(
-                            width: double.maxFinite,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               color: Theme.of(context).hoverColor
